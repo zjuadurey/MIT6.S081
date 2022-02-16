@@ -6,18 +6,18 @@
 char*
 fmtname(char *path)
 {
-  static char buf[DIRSIZ+1];
+  static char buf[DIRSIZ+1];//buf[14+1]
   char *p;
 
   // Find first character after last slash.
-  for(p=path+strlen(path); p >= path && *p != '/'; p--)
+  for(p=path+strlen(path); p >= path && *p != '/'; p--)// navigate to the end and go back to the last slash
     ;
-  p++;
+  p++;   // first character after last slash
 
   // Return blank-padded name.
-  if(strlen(p) >= DIRSIZ)
+  if(strlen(p) >= DIRSIZ) // length after last slash
     return p;
-  memmove(buf, p, strlen(p));
+  memmove(buf, p, strlen(p)); // strlen(p) >= DIRSIZ: use ' '(blank) to fill the rest of the buf
   memset(buf+strlen(p), ' ', DIRSIZ-strlen(p));
   return buf;
 }
@@ -30,12 +30,12 @@ ls(char *path)
   struct dirent de;
   struct stat st;
 
-  if((fd = open(path, 0)) < 0){
+  if((fd = open(path, 0)) < 0){ //O_RDONLY
     fprintf(2, "ls: cannot open %s\n", path);
     return;
   }
 
-  if(fstat(fd, &st) < 0){
+  if(fstat(fd, &st) < 0){ //write the state of file of fd(O_RDONLY, etc) into the st(the struct of file)
     fprintf(2, "ls: cannot stat %s\n", path);
     close(fd);
     return;
@@ -43,7 +43,7 @@ ls(char *path)
 
   switch(st.type){
   case T_FILE:
-    printf("%s %d %d %l\n", fmtname(path), st.type, st.ino, st.size);
+    printf("%s %d  %d %l\n", fmtname(path), st.type, st.ino, st.size);
     break;
 
   case T_DIR:
