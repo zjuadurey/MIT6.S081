@@ -194,6 +194,7 @@ UPROGS=\
 	$U/_wc\
 	$U/_zombie\
 	$U/_p1\
+	$U/_p3\
 
 
 
